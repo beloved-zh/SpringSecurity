@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/security
+       http://www.springframework.org/schema/security/spring-security.xsd">
+
+
+    <!--配置SpringSecurity-->
+
+    <!--释放静态资源-->
+    <security:http pattern="/css/**" security="none" />
+    <security:http pattern="/img/**" security="none" />
+    <security:http pattern="/plugins/**" security="none" />
+    <security:http pattern="/failer.jsp" security="none" />
+
+    <!--
+        auto-config="true" : 表示自动加载SpringSecurity的配置文件
+        use-expressions="true" : 表示使用Spring的el表达式配置SpringSecurity
+    -->
+    <security:http auto-config="true" use-expressions="true">
+        <!--让登录页面可以匿名访问-->
+        <security:intercept-url pattern="/login.jsp" access="permitAll()" />
+
+        <!--
+            拦截资源
+            pattern="/**" : 表示拦截所有资源
+            access="hasAnyRole('ROLE_USER')" : 表示只有ROLE_USER角色才能访问资源
+        -->
+        <security:intercept-url pattern="/**" access="hasAnyRole('ROLE_USER')"/>
+
+        <!--
+            配置认证信息。自定义登录页面
+            login-page ： 登录页面
+            login-processing-url ： 登录请求 使用SpringSecurity默认提供的
+            default-target-url ：认证成功的页面
+            authentication-failure-url ： 登录失败页面
+            username-parameter ： 登录页面的用户名name  默认username
+            password-parameter ： 登录页面的密码name  默认password
+        -->
+        <security:form-login login-page="/login.jsp"
+                             login-processing-url="/login"
+                             default-target-url="/index.jsp"
+                             authentication-failure-url="/failer.jsp"
+                             username-parameter="username"
+                             password-parameter="password" />
+
+        <!--
+            配置退出登录信息
+            logout-url ： 退出请求  SpringSecurity默认提供
+            logout-success-url ： 退出之后的页面
+        -->
+        <security:logout logout-url="/logout"
+                         logout-success-url="/login.jsp" />
+
+        <!--取出csrf拦截过滤器-->
+        <!--<security:csrf disabled="true" />-->
+    </security:http>
+
+    <!--加密对象放入ioc容器-->
+    <bean id="passwordEncoder"
+          class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+
+    <!--设置Spring Security认证用户信息的来源-->
+    <!--
+        {noop} : SpringSecurity默认认证是加密的，{noop}表示不加密
+    -->
+    <security:authentication-manager>
+        <security:authentication-provider user-service-ref="userServiceImpl">
+            <!--指定认证使用的加密对象-->
+            <security:password-encoder ref="passwordEncoder"/>
+        </security:authentication-provider>
+    </security:authentication-manager>
+
+</beans>
