@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <aside class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
@@ -23,6 +24,8 @@
                     href="${pageContext.request.contextPath}/pages/main.jsp"><i
                     class="fa fa-dashboard"></i> <span>首页</span></a></li>
 
+            <%-- 只有管理员可以操作系统管理 --%>
+            <security:authorize access="hasAnyRole('ROLE_ADMIN')">
             <li class="treeview"><a href="#"> <i class="fa fa-cogs"></i>
                 <span>系统管理</span> <span class="pull-right-container"> <i
                         class="fa fa-angle-left pull-right"></i>
@@ -44,23 +47,34 @@
                     </a></li>
                 </ul>
             </li>
+            </security:authorize>
 
+            <%-- 管理员和普通用户都可以操作基础数据 --%>
+            <security:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_USER')">
             <li class="treeview"><a href="#"> <i class="fa fa-cube"></i>
                 <span>基础数据</span> <span class="pull-right-container"> <i
                         class="fa fa-angle-left pull-right"></i>
 				</span>
             </a>
                 <ul class="treeview-menu">
-                    <li id="system-setting"><a
-                            href="${pageContext.request.contextPath}/product/findAll">
-                        <i class="fa fa-circle-o"></i> 产品管理
-                    </a></li>
-                    <li id="system-setting"><a
-                            href="${pageContext.request.contextPath}/order/findAll">
-                        <i class="fa fa-circle-o"></i> 订单管理
-                    </a></li>
+                    <!-- 产品模块还需要产品角色，注意这里还需再次指定超级管理员 -->
+                    <security:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_PRODUCT')">
+                        <li id="system-setting"><a
+                                href="${pageContext.request.contextPath}/product/findAll">
+                            <i class="fa fa-circle-o"></i> 产品管理
+                        </a></li>
+                    </security:authorize>
+                    <!-- 订单模块需要订单角色 -->
+                    <security:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_ORDER')">
+                        <li id="system-setting"><a
+                                href="${pageContext.request.contextPath}/order/findAll">
+                            <i class="fa fa-circle-o"></i> 订单管理
+                        </a></li>
+                    </security:authorize>
+
                 </ul>
             </li>
+            </security:authorize>
         </ul>
     </section>
     <!-- /.sidebar -->

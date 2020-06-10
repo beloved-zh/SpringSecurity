@@ -29,7 +29,7 @@
             pattern="/**" : 表示拦截所有资源
             access="hasAnyRole('ROLE_USER')" : 表示只有ROLE_USER角色才能访问资源
         -->
-        <security:intercept-url pattern="/**" access="hasAnyRole('ROLE_USER')"/>
+        <security:intercept-url pattern="/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
 
         <!--
             配置认证信息。自定义登录页面
@@ -57,6 +57,23 @@
 
         <!--取出csrf拦截过滤器-->
         <!--<security:csrf disabled="true" />-->
+
+        <!--
+            开启remember me过滤器
+            token-validity-seconds="60"：设置token存储时间为60秒
+            data-source-ref="dataSource"：持久化token到数据库。dataSource来自ioc容器
+            remember-me-parameter：记住我前端name名。默认remember-me
+        -->
+        <security:remember-me token-validity-seconds="60"
+                                data-source-ref="dataSource"
+                                remember-me-parameter="remember-me"/>
+
+
+        <!--
+            处理异常信息
+            只可以处理403异常
+        -->
+        <security:access-denied-handler error-page="/403.jsp" />
     </security:http>
 
     <!--加密对象放入ioc容器-->

@@ -4,6 +4,7 @@
         xmlns:context="http://www.springframework.org/schema/context"
         xmlns:aop="http://www.springframework.org/schema/aop"
         xmlns:tx="http://www.springframework.org/schema/tx"
+        xmlns:security="http://www.springframework.org/schema/security"
         xmlns:mvc="http://www.springframework.org/schema/mvc"
         xsi:schemaLocation="http://www.springframework.org/schema/beans
 			    http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -14,9 +15,11 @@
 			    http://www.springframework.org/schema/tx
 			    http://www.springframework.org/schema/tx/spring-tx.xsd
 			    http://www.springframework.org/schema/mvc
-			    http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+			    http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                http://www.springframework.org/schema/security
+                http://www.springframework.org/schema/security/spring-security.xsd">
 
-    <context:component-scan base-package="com.itheima.controller"/>
+    <context:component-scan base-package="com.zh.controller"/>
 
     <mvc:annotation-driven/>
 
@@ -27,6 +30,16 @@
 
     <mvc:default-servlet-handler/>
 
-
+    <!--
+        开启权限控制的注解支持
+        实际开发中只使用一种即可
+        secured-annotations="enabled"  ： SpringSecurity内部的权限控制注解开关
+        pre-post-annotations="enabled" ： Spring指定的权限控制的注解开关
+        jsr250-annotations="enabled"   ： 开启java250注解支持
+    -->
+    <security:global-method-security
+            secured-annotations="enabled"
+            pre-post-annotations="enabled"
+            jsr250-annotations="enabled" />
 
 </beans>

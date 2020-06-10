@@ -28,10 +28,10 @@
     </bean>
 
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.itheima.dao"/>
+        <property name="basePackage" value="com.zh.dao"/>
     </bean>
 
-    <context:component-scan base-package="com.itheima.service"/>
+    <context:component-scan base-package="com.zh.service"/>
 
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"/>
