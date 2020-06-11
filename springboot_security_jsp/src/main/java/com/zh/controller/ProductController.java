@@ -1,16 +1,20 @@
 package com.zh.controller;
 
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class MyController {
+@RequestMapping("/product")
+public class ProductController {
 
-    @GetMapping("/")
-    @ResponseBody
-    public String index(){
-        return "test";
+
+    @Secured({"ROLE_ADMIN","ROLE_PRODUCT"})
+    //@RolesAllowed({"ROLE_ADMIN","ROLE_PRODUCT"})
+    //@PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_PRODUCT')")
+    @RequestMapping("/findAll")
+    public String findAll(){
+        return "product-list";
     }
-
 }

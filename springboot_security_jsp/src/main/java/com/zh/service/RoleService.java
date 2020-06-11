@@ -1,6 +1,6 @@
 package com.zh.service;
 
-import com.zh.domain.SysRole;
+import com.zh.pojo.SysRole;
 
 import java.util.List;
 
